@@ -28,7 +28,7 @@ Kudi Arc is an Africa-first stablecoin FX and remittance dApp built on **Arc Net
 3. **Yield** — Earn 4.86% APY on your USDC via USYC (tokenized US Treasury Bills)
 
 **It combines:**
-On-chain stablecoin swaps . Off-chain fiat settlement . Yield on idle balances
+On-chain stablecoin swaps • Off-chain fiat settlement • Yield on idle balances
 
 
 ---
