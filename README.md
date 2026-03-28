@@ -264,7 +264,7 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ## 👨‍💻 Builder
 
-Built by **Musa AIS** — Nigeria 🇳🇬
+Built by **Musa AIS**
 
 - X: [@KudiArc](https://twitter.com/KudiArc)
 - Discord: [discord.gg/kudiarc](https://discord.gg/kudiarc)
@@ -273,7 +273,7 @@ Built by **Musa AIS** — Nigeria 🇳🇬
 
 <div align="center">
 
-**Built on Arc Network · Made in Nigeria 🇳🇬**
+**Built on Arc Network**
 
 *Kudi means money. Arc means infrastructure. Together — financial freedom for Africa.*
 
