@@ -2,11 +2,16 @@
 
 # 🟡 Kudi Arc
 
-### Stablecoin FX & Remittance Protocol for Africa
+### Kudi Arc is a hybrid on-chain FX desk and remittance engine for Africa.
+
+## It combines:
+On-chain stablecoin swaps
+Off-chain fiat settlement
+Yield on idle balances
 
 **Built on Arc Network · Powered by Circle USDC & EURC**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Testnet-27AE74?style=for-the-badge)](http://129.80.199.123)
+[![Testnet Demo](https://img.shields.io/badge/Live%20Demo-Testnet-27AE74?style=for-the-badge)](http://129.80.199.123)
 [![Contract](https://img.shields.io/badge/Contract-Verified-27AE74?style=for-the-badge)](https://testnet.arcscan.app/address/0x8a10D0e61201000B5456EC725165892B08832C5f)
 [![Audit](https://img.shields.io/badge/Security%20Audit-SolidityScan-F5A623?style=for-the-badge)](https://solidityscan.com)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
@@ -41,6 +46,18 @@ Kudi Arc is an Africa-first stablecoin FX and remittance dApp built on **Arc Net
 | Stablecoin adoption | Nigeria #3 globally for crypto adoption |
 
 Arc Network's USDC-as-gas design makes it the perfect infrastructure for Africa — users only need USDC, nothing else.
+
+---
+
+---
+
+## 🧩 Why Kudi Arc Wins
+
+USDC-native chain (Arc) → no gas friction
+Africa-first design → not retrofitted like global apps
+Hybrid model → combines speed of crypto with reach of fiat
+Built-in yield (USYC) → idle capital becomes productive
+Transparent backend + on-chain auditability
 
 ---
 
@@ -159,7 +176,6 @@ Key security features in V2:
 | Frontend | HTML/CSS/JS, Ethers.js 6.7 |
 | Backend | Python 3.10, Flask, Gunicorn |
 | Database | SQLite (transaction history) |
-| Infrastructure | Oracle Cloud Ubuntu 22.04 |
 | Process Manager | systemd |
 | Web Server | Nginx |
 | FX Rates | Open Exchange Rates API |
@@ -201,6 +217,18 @@ python3 db.py
 # Start backend
 python3 app.py
 ```
+
+---
+
+---
+
+## 🔄 How It Works
+
+1. User connects wallet
+2. User swaps USDC ↔ EURC (on-chain)
+3. User initiates remittance
+4. Backend processes fiat payout via partners
+5. Recipient receives local currency
 
 ---
 
