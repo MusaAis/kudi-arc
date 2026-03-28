@@ -5,13 +5,13 @@
 ### Kudi Arc is a hybrid on-chain FX desk and remittance engine for Africa.
 
 **It combines:**
-On-chain stablecoin swaps,
-Off-chain fiat settlement,
-Yield on idle balances.
+- On-chain stablecoin swaps
+- Off-chain fiat settlement
+- Yield on idle balances
 
 **Built on Arc Network · Powered by Circle USDC & EURC**
 
-[![Testnet Demo](https://img.shields.io/badge/Live%20Demo-Testnet-27AE74?style=for-the-badge)](http://129.80.199.123)
+[![Testnet Demo](https://img.shields.io/badge/Testnet%20Demo-Testnet-27AE74?style=for-the-badge)](http://129.80.199.123)
 [![Contract](https://img.shields.io/badge/Contract-Verified-27AE74?style=for-the-badge)](https://testnet.arcscan.app/address/0x8a10D0e61201000B5456EC725165892B08832C5f)
 [![Audit](https://img.shields.io/badge/Security%20Audit-SolidityScan-F5A623?style=for-the-badge)](https://solidityscan.com)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
@@ -31,8 +31,6 @@ Kudi Arc is an Africa-first stablecoin FX and remittance dApp built on **Arc Net
 1. **FX Swap** — Swap between USDC and EURC at live market rates, with near-zero fees
 2. **Remittance** — Send USDC/EURC → receive NGN, KES, GHS, XOF, FCFA and more in your bank account or mobile wallet
 3. **Yield** — Earn 4.86% APY on your USDC via USYC (tokenized US Treasury Bills)
-
-> *"Kudi"* means **money** in Hausa and Yoruba — Nigeria's two most spoken languages.
 
 ---
 
