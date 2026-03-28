@@ -1,0 +1,8 @@
+.env
+*.db
+__pycache__/
+*.pyc
+kudi-env/
+deployment.json
+*.log
+.DS_Store

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Kudi Arc — Yield</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--forest:#0D3B2E;--emerald:#1A6B4A;--jade:#27AE74;--gold:#F5A623;--amber:#E8851A;--cream:#FAF5E9;--muted:#7A8B7F;--white:#FFFFFF;--error:#E05C5C;--blue:#2775CA;--radius:16px}
+  body{font-family:'DM Sans',sans-serif;background:var(--forest);color:var(--cream);min-height:100vh;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle at 20% 20%,rgba(39,174,116,0.08) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(245,166,35,0.06) 0%,transparent 50%);pointer-events:none;z-index:0}
+  .container{position:relative;z-index:1;max-width:420px;margin:0 auto;padding:0 16px 100px}
+  .header{display:flex;justify-content:space-between;align-items:center;padding:20px 0 16px}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+  .logo-mark{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--amber));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--forest)}
+  .logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--cream)}
+  .logo-text span{color:var(--gold)}
+  .wallet-chip{display:flex;align-items:center;gap:6px;background:rgba(39,174,116,0.12);border:1px solid rgba(39,174,116,0.25);border-radius:20px;padding:5px 10px;font-size:12px;color:var(--jade)}
+  .wallet-dot{width:8px;height:8px;background:var(--jade);border-radius:50%}
+
+  /* APY Hero */
+  .apy-hero{background:linear-gradient(135deg,#0a2a1f,#1a4a32);border:1px solid rgba(39,174,116,0.2);border-radius:var(--radius);padding:20px;margin-bottom:12px;position:relative;overflow:hidden}
+  .apy-hero::before{content:'%';position:absolute;right:-10px;top:-20px;font-size:120px;font-family:'Syne',sans-serif;font-weight:800;color:rgba(255,255,255,0.03);line-height:1}
+  .apy-label{font-size:11px;color:var(--jade);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+  .apy-value{font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:var(--jade);line-height:1;margin-bottom:4px}
+  .apy-sub{font-size:13px;color:rgba(250,245,233,0.6)}
+  .apy-source{display:inline-flex;align-items:center;gap:6px;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.2);border-radius:10px;padding:4px 10px;font-size:11px;color:var(--gold);margin-top:10px}
+
+  /* Stats Row */
+  .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+  .stat-card{background:rgba(250,245,233,0.04);border:1px solid rgba(250,245,233,0.08);border-radius:12px;padding:12px 14px}
+  .stat-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+  .stat-value{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--cream)}
+  .stat-sub{font-size:10px;color:var(--muted);margin-top:2px}
+
+  /* User Balance Card */
+  .balance-card{background:rgba(39,174,116,0.08);border:1px solid rgba(39,174,116,0.2);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+  .balance-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--jade);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .balance-main{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--white);margin-bottom:4px}
+  .balance-sub{font-size:13px;color:var(--muted)}
+  .balance-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06)}
+  .earnings-badge{background:rgba(39,174,116,0.15);border:1px solid rgba(39,174,116,0.25);border-radius:10px;padding:4px 10px;font-size:12px;color:var(--jade)}
+
+  /* Action Card */
+  .action-card{background:rgba(250,245,233,0.04);border:1px solid rgba(250,245,233,0.08);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+  .tab-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px}
+  .tab-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:13px;font-weight:600;color:var(--muted)}
+  .tab-btn.active{background:rgba(39,174,116,0.15);border-color:var(--jade);color:var(--jade)}
+  .input-wrap{background:rgba(13,59,46,0.6);border:1px solid rgba(250,245,233,0.08);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+  .input-wrap:focus-within{border-color:rgba(39,174,116,0.4)}
+  .input-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .input-label{font-size:11px;color:var(--jade);text-transform:uppercase;letter-spacing:0.8px}
+  .input-bal{font-size:11px;color:var(--muted)}
+  .yield-input{width:100%;background:none;border:none;outline:none;color:var(--white);font-family:'Syne',sans-serif;font-size:26px;font-weight:600}
+  .yield-input::placeholder{color:rgba(255,255,255,0.2)}
+  .yield-input::-webkit-inner-spin-button{-webkit-appearance:none}
+  .token-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.08);border-radius:16px;padding:4px 10px;font-size:13px;font-weight:600;color:var(--cream);margin-top:4px}
+  .token-dot-usdc{width:10px;height:10px;background:#2775CA;border-radius:50%}
+  .token-dot-usyc{width:10px;height:10px;background:var(--gold);border-radius:50%}
+
+  /* Preview Box */
+  .preview-box{background:rgba(13,59,46,0.4);border:1px solid rgba(39,174,116,0.12);border-radius:10px;padding:12px 14px;margin-bottom:12px;display:none}
+  .preview-box.show{display:block}
+  .preview-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+  .preview-row:last-child{margin-bottom:0;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06);font-weight:600}
+  .preview-label{color:var(--muted)}
+  .preview-value{color:var(--cream)}
+  .preview-value.green{color:var(--jade)}
+
+  /* Action Button */
+  .action-btn{width:100%;background:linear-gradient(135deg,var(--jade),var(--emerald));border:none;border-radius:14px;color:var(--white);font-family:'Syne',sans-serif;font-size:15px;font-weight:700;padding:15px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 16px rgba(39,174,116,0.25)}
+  .action-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(39,174,116,0.35)}
+  .action-btn:disabled{background:rgba(255,255,255,0.08);color:var(--muted);cursor:not-allowed;box-shadow:none;transform:none}
+  .action-btn.gold{background:linear-gradient(135deg,var(--gold),var(--amber));color:var(--forest);box-shadow:0 4px 16px rgba(245,166,35,0.25)}
+
+  /* How It Works */
+  .how-card{background:rgba(250,245,233,0.03);border:1px solid rgba(250,245,233,0.07);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+  .how-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--cream);margin-bottom:12px}
+  .how-step{display:flex;gap:12px;margin-bottom:10px}
+  .how-num{width:24px;height:24px;background:rgba(39,174,116,0.15);border:1px solid rgba(39,174,116,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--jade);flex-shrink:0;margin-top:1px}
+  .how-text{font-size:12px;color:rgba(250,245,233,0.7);line-height:1.5}
+  .how-text strong{color:var(--cream)}
+
+  /* Bottom Nav */
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,59,46,0.95);backdrop-filter:blur(20px);border-top:1px solid rgba(250,245,233,0.08);display:flex;justify-content:space-around;padding:10px 0 20px;z-index:50}
+  .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--muted);font-size:10px;font-weight:500;padding:4px 20px}
+  .nav-item.active{color:var(--jade)}
+  .nav-icon{font-size:20px}
+
+  /* Toast */
+  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:#1C1C1C;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 20px;font-size:13px;max-width:340px;width:calc(100% - 32px);text-align:center;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);z-index:100}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .toast.success{border-color:var(--jade);color:var(--jade)}
+  .toast.error{border-color:var(--error);color:var(--error)}
+  .toast.info{border-color:var(--gold);color:var(--gold)}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.2);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:8px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .apy-hero,.stats-row,.balance-card,.action-card{animation:fadeUp 0.35s ease both}
+  .stats-row{animation-delay:0.05s}
+  .balance-card{animation-delay:0.1s}
+  .action-card{animation-delay:0.15s}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <a href="/" class="logo">
+      <div class="logo-mark">K</div>
+      <div class="logo-text">Kudi<span>Arc</span></div>
+    </a>
+    <div id="walletArea">
+      <button onclick="connectWallet()" style="background:rgba(39,174,116,0.15);border:1px solid rgba(39,174,116,0.3);color:var(--jade);font-size:13px;padding:8px 14px;border-radius:20px;cursor:pointer">Connect</button>
+    </div>
+  </header>
+
+  <!-- APY Hero -->
+  <div class="apy-hero">
+    <div class="apy-label">Current Annual Yield</div>
+    <div class="apy-value" id="apyValue">4.86%</div>
+    <div class="apy-sub">Earn yield on your USDC — paid in USYC</div>
+    <div class="apy-source">🏛️ Backed by US Treasury Bills</div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total Deposited</div>
+      <div class="stat-value" id="totalSupply">—</div>
+      <div class="stat-sub">USYC on Arc</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">1 USYC Value</div>
+      <div class="stat-value" id="usycValue">$1.02</div>
+      <div class="stat-sub" id="usycNgn">≈ ₦1,410</div>
+    </div>
+  </div>
+
+  <!-- User Balance -->
+  <div class="balance-card" id="balanceCard">
+    <div class="balance-title">💰 Your Yield Position</div>
+    <div class="balance-main" id="userUsyc">0.00 USYC</div>
+    <div class="balance-sub" id="userUsdcVal">≈ $0.00 USDC</div>
+    <div class="balance-row">
+      <div style="font-size:12px;color:var(--muted)">NGN Value</div>
+      <div class="earnings-badge" id="userNgn">₦0</div>
+    </div>
+    <div class="balance-row">
+      <div style="font-size:12px;color:var(--muted)">Earnings (est.)</div>
+      <div class="earnings-badge" id="userEarnings">+$0.00</div>
+    </div>
+  </div>
+
+  <!-- Deposit / Withdraw -->
+  <div class="action-card">
+    <div class="tab-row">
+      <div class="tab-btn active" id="tabDeposit" onclick="setTab('deposit')">
+        📥 Deposit
+      </div>
+      <div class="tab-btn" id="tabWithdraw" onclick="setTab('withdraw')">
+        📤 Withdraw
+      </div>
+    </div>
+
+    <!-- Deposit UI -->
+    <div id="depositUI">
+      <div class="input-wrap">
+        <div class="input-top">
+          <div class="input-label">You deposit</div>
+          <div class="input-bal" id="depositBal">Balance: — USDC</div>
+        </div>
+        <input type="number" class="yield-input" id="depositAmount" placeholder="0.00" oninput="updateDepositPreview()">
+        <div class="token-badge"><div class="token-dot-usdc"></div>USDC</div>
+      </div>
+
+      <div class="preview-box" id="depositPreview">
+        <div class="preview-row">
+          <span class="preview-label">You deposit</span>
+          <span class="preview-value" id="prevDepositIn">—</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-label">You receive</span>
+          <span class="preview-value green" id="prevDepositOut">—</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-label">Current APY</span>
+          <span class="preview-value green" id="prevApy">4.86%</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-label">Est. yearly earnings</span>
+          <span class="preview-value green" id="prevEarnings">—</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-label">NGN value</span>
+          <span class="preview-value" id="prevNgn">—</span>
+        </div>
+      </div>
+
+      <button class="action-btn" id="depositBtn" onclick="handleDeposit()" disabled>
+        Enter amount to deposit
+      </button>
+    </div>
+
+    <!-- Withdraw UI -->
+    <div id="withdrawUI" style="display:none">
+      <div class="input-wrap">
+        <div class="input-top">
+          <div class="input-label">You withdraw</div>
+          <div class="input-bal" id="withdrawBal">Balance: — USYC</div>
+        </div>
+        <input type="number" class="yield-input" id="withdrawAmount" placeholder="0.00" oninput="updateWithdrawPreview()">
+        <div class="token-badge"><div class="token-dot-usyc"></div>USYC</div>
+      </div>
+
+      <div class="preview-box" id="withdrawPreview">
+        <div class="preview-row">
+          <span class="preview-label">You burn</span>
+          <span class="preview-value" id="prevWithdrawIn">—</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-label">You receive</span>
+          <span class="preview-value green" id="prevWithdrawOut">—</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-label">NGN value</span>
+          <span class="preview-value" id="prevWithdrawNgn">—</span>
+        </div>
+      </div>
+
+      <button class="action-btn gold" id="withdrawBtn" onclick="handleWithdraw()" disabled>
+        Enter amount to withdraw
+      </button>
+    </div>
+  </div>
+
+  <!-- How It Works -->
+  <div class="how-card">
+    <div class="how-title">📖 How USYC Yield Works</div>
+    <div class="how-step">
+      <div class="how-num">1</div>
+      <div class="how-text"><strong>Deposit USDC</strong> — Your USDC is used to purchase USYC tokens backed by short-duration US Treasury Bills</div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">2</div>
+      <div class="how-text"><strong>Earn automatically</strong> — USYC grows in value daily. No staking or claiming needed. Hold = earn.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">3</div>
+      <div class="how-text"><strong>Withdraw anytime</strong> — Burn your USYC tokens to receive USDC back with accumulated yield</div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">4</div>
+      <div class="how-text"><strong>NGN context</strong> — See your yield value in Naira equivalent at live rates</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <a href="/" class="nav-item"><div class="nav-icon">⇄</div><span>Swap</span></a>
+  <a href="/send.html" class="nav-item"><div class="nav-icon">📤</div><span>Send</span></a>
+  <a href="/yield.html" class="nav-item active"><div class="nav-icon">📈</div><span>Yield</span></a>
+  <a href="#" class="nav-item" onclick="openHistory()"><div class="nav-icon">📋</div><span>History</span></a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API   = 'http://129.80.199.123';
+const USDC  = '0x3600000000000000000000000000000000000000';
+const USYC  = '0xe9185F0c5F296Ed1797AaE4238D26CCaBEadb86C';
+const TELLER= '0x9fdF14c5B14173D74C08Af27AebFf39240dC105A';
+
+const ERC20_ABI = [
+  'function balanceOf(address) view returns (uint256)',
+  'function approve(address,uint256) returns (bool)',
+  'function allowance(address,address) view returns (uint256)'
+];
+
+const TELLER_ABI = [
+  'function deposit(address depositAsset, uint256 depositAmount, address minimumMint) returns (uint256)',
+  'function withdraw(address withdrawAsset, uint256 shareAmount, address minimumAssets) returns (uint256)'
+];
+
+let state = {
+  wallet: null, provider: null, signer: null,
+  tab: 'deposit', isAllowlisted: false,
+  stats: { apy: 4.86, usdc_per_usyc: 1.02, ngn_per_usd: 1382 },
+  balances: { usdc: 0, usyc: 0 }
+};
+
+async function connectWallet() {
+  if (!window.ethereum) { showToast('Install MetaMask or Rabby','error'); return; }
+  try {
+    try {
+      await window.ethereum.request({ method:'wallet_addEthereumChain', params:[{
+        chainId:'0x4CEF52', chainName:'Arc Testnet',
+        nativeCurrency:{name:'USDC',symbol:'USDC',decimals:18},
+        rpcUrls:['https://rpc.testnet.arc.network'],
+        blockExplorerUrls:['https://testnet.arcscan.app']
+      }]});
+    } catch(e) {}
+    try { await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x4CEF52'}]}); } catch(e) {}
+    const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
+    state.wallet   = accounts[0];
+    state.provider = new ethers.BrowserProvider(window.ethereum);
+    state.signer   = await state.provider.getSigner();
+    document.getElementById('walletArea').innerHTML =
+      `<div class="wallet-chip"><div class="wallet-dot"></div>${state.wallet.slice(0,6)}...${state.wallet.slice(-4)}</div>`;
+    await loadBalances();
+    await loadYieldBalance();
+    showToast('Wallet connected ✓','success');
+  } catch(e) { showToast('Connection failed','error'); }
+}
+
+async function loadStats() {
+  try {
+    const res  = await fetch(`${API}/api/yield/stats`);
+    const data = await res.json();
+    state.stats = data;
+    document.getElementById('apyValue').textContent    = data.apy.toFixed(2) + '%';
+    document.getElementById('totalSupply').textContent = parseFloat(data.total_supply).toLocaleString(undefined,{maximumFractionDigits:0}) + ' USYC';
+    document.getElementById('usycValue').textContent   = '$' + data.usdc_per_usyc.toFixed(4);
+    document.getElementById('usycNgn').textContent     = '≈ ₦' + data.ngn_per_usyc.toLocaleString(undefined,{maximumFractionDigits:0});
+  } catch(e) {}
+}
+
+async function loadBalances() {
+  if (!state.wallet || !state.provider) return;
+  try {
+    const usdc = new ethers.Contract(USDC, ERC20_ABI, state.provider);
+    const usyc = new ethers.Contract(USYC, ERC20_ABI, state.provider);
+    const uBal = await usdc.balanceOf(state.wallet);
+    const yBal = await usyc.balanceOf(state.wallet);
+    state.balances.usdc = Number(uBal) / 1e6;
+    state.balances.usyc = Number(yBal) / 1e6;
+    document.getElementById('depositBal').textContent  = `Balance: ${state.balances.usdc.toFixed(2)} USDC`;
+    document.getElementById('withdrawBal').textContent = `Balance: ${state.balances.usyc.toFixed(4)} USYC`;
+  } catch(e) {}
+}
+
+async function loadYieldBalance() {
+  if (!state.wallet) return;
+  try {
+    const res  = await fetch(`${API}/api/yield/balance/${state.wallet}`);
+    const data = await res.json();
+    state.isAllowlisted = data.is_allowlisted;
+    document.getElementById('userUsyc').textContent    = data.usyc_balance.toFixed(4) + ' USYC';
+    document.getElementById('userUsdcVal').textContent = '≈ $' + data.usdc_value.toFixed(2) + ' USDC';
+    document.getElementById('userNgn').textContent     = '₦' + data.ngn_value.toLocaleString(undefined,{maximumFractionDigits:0});
+    document.getElementById('userEarnings').textContent= '+$' + data.earnings_usdc.toFixed(4);
+
+    // Update button states silently based on allowlist
+    updateDepositBtn();
+    updateWithdrawBtn();
+  } catch(e) {}
+}
+
+function setTab(tab) {
+  state.tab = tab;
+  document.getElementById('depositUI').style.display  = tab==='deposit' ? 'block':'none';
+  document.getElementById('withdrawUI').style.display = tab==='withdraw'? 'block':'none';
+  document.getElementById('tabDeposit').classList.toggle('active',  tab==='deposit');
+  document.getElementById('tabWithdraw').classList.toggle('active', tab==='withdraw');
+}
+
+function updateDepositPreview() {
+  const amount = parseFloat(document.getElementById('depositAmount').value)||0;
+  const preview= document.getElementById('depositPreview');
+  if (amount <= 0) { preview.classList.remove('show'); updateDepositBtn(); return; }
+  const usyc_out     = amount / state.stats.usdc_per_usyc;
+  const yearly       = amount * (state.stats.apy / 100);
+  const ngn_val      = amount * state.stats.ngn_per_usd;
+  document.getElementById('prevDepositIn').textContent  = amount + ' USDC';
+  document.getElementById('prevDepositOut').textContent = usyc_out.toFixed(4) + ' USYC';
+  document.getElementById('prevEarnings').textContent   = '+$' + yearly.toFixed(2) + ' / year';
+  document.getElementById('prevNgn').textContent        = '₦' + ngn_val.toLocaleString(undefined,{maximumFractionDigits:0});
+  preview.classList.add('show');
+  updateDepositBtn();
+}
+
+function updateWithdrawPreview() {
+  const amount = parseFloat(document.getElementById('withdrawAmount').value)||0;
+  const preview= document.getElementById('withdrawPreview');
+  if (amount <= 0) { preview.classList.remove('show'); updateWithdrawBtn(); return; }
+  const usdc_out = amount * state.stats.usdc_per_usyc;
+  const ngn_val  = usdc_out * state.stats.ngn_per_usd;
+  document.getElementById('prevWithdrawIn').textContent  = amount + ' USYC';
+  document.getElementById('prevWithdrawOut').textContent = usdc_out.toFixed(4) + ' USDC';
+  document.getElementById('prevWithdrawNgn').textContent = '₦' + ngn_val.toLocaleString(undefined,{maximumFractionDigits:0});
+  preview.classList.add('show');
+  updateWithdrawBtn();
+}
+
+function updateDepositBtn() {
+  const btn    = document.getElementById('depositBtn');
+  const amount = parseFloat(document.getElementById('depositAmount').value)||0;
+  if (!state.wallet) { btn.disabled=true; btn.textContent='Connect Wallet First'; return; }
+  if (!state.isAllowlisted) { btn.disabled=true; btn.textContent='⏳ Awaiting Circle Allowlist'; return; }
+  if (amount <= 0) { btn.disabled=true; btn.textContent='Enter amount to deposit'; return; }
+  if (amount > state.balances.usdc) { btn.disabled=true; btn.textContent='Insufficient USDC balance'; return; }
+  btn.disabled=false;
+  btn.textContent=`Deposit ${amount} USDC → Earn ${(amount*(state.stats.apy/100)).toFixed(2)}/yr`;
+}
+
+function updateWithdrawBtn() {
+  const btn    = document.getElementById('withdrawBtn');
+  const amount = parseFloat(document.getElementById('withdrawAmount').value)||0;
+  if (!state.wallet) { btn.disabled=true; btn.textContent='Connect Wallet First'; return; }
+  if (!state.isAllowlisted) { btn.disabled=true; btn.textContent='⏳ Awaiting Circle Allowlist'; return; }
+  if (amount <= 0) { btn.disabled=true; btn.textContent='Enter amount to withdraw'; return; }
+  if (amount > state.balances.usyc) { btn.disabled=true; btn.textContent='Insufficient USYC balance'; return; }
+  btn.disabled=false;
+  btn.textContent=`Withdraw ${amount} USYC → ${(amount*state.stats.usdc_per_usyc).toFixed(2)} USDC`;
+}
+
+async function handleDeposit() {
+  if (!state.isAllowlisted) { showToast('Awaiting Circle allowlist approval','info'); return; }
+  const amount = parseFloat(document.getElementById('depositAmount').value);
+  if (!amount || amount <= 0) return;
+  const btn = document.getElementById('depositBtn');
+  try {
+    const amountWei = BigInt(Math.floor(amount * 1_000_000));
+    btn.innerHTML   = '<span class="spinner"></span>Step 1/2: Approving USDC...';
+    btn.disabled    = true;
+    const usdc      = new ethers.Contract(USDC, ERC20_ABI, state.signer);
+    const approveTx = await usdc.approve(TELLER, amountWei);
+    await approveTx.wait();
+    btn.innerHTML = '<span class="spinner"></span>Step 2/2: Depositing...';
+    const teller    = new ethers.Contract(TELLER, TELLER_ABI, state.signer);
+    const depositTx = await teller.deposit(USDC, amountWei, USYC);
+    const receipt   = await depositTx.wait();
+    document.getElementById('depositAmount').value = '';
+    document.getElementById('depositPreview').classList.remove('show');
+    await loadBalances();
+    await loadYieldBalance();
+    showToast(`✅ Deposited! TX: ${receipt.hash.slice(0,10)}...`,'success');
+  } catch(e) {
+    btn.disabled  = false;
+    updateDepositBtn();
+    const msg = e?.reason || e?.message || 'Deposit failed';
+    if (msg.includes('user rejected')) showToast('Rejected in wallet','error');
+    else showToast(msg.slice(0,80),'error');
+  }
+}
+
+async function handleWithdraw() {
+  if (!state.isAllowlisted) { showToast('Awaiting Circle allowlist approval','info'); return; }
+  const amount = parseFloat(document.getElementById('withdrawAmount').value);
+  if (!amount || amount <= 0) return;
+  const btn = document.getElementById('withdrawBtn');
+  try {
+    const amountWei  = BigInt(Math.floor(amount * 1_000_000));
+    btn.innerHTML    = '<span class="spinner"></span>Withdrawing...';
+    btn.disabled     = true;
+    const teller     = new ethers.Contract(TELLER, TELLER_ABI, state.signer);
+    const withdrawTx = await teller.withdraw(USDC, amountWei, USYC);
+    const receipt    = await withdrawTx.wait();
+    document.getElementById('withdrawAmount').value = '';
+    document.getElementById('withdrawPreview').classList.remove('show');
+    await loadBalances();
+    await loadYieldBalance();
+    showToast(`✅ Withdrawn! TX: ${receipt.hash.slice(0,10)}...`,'success');
+  } catch(e) {
+    btn.disabled = false;
+    updateWithdrawBtn();
+    const msg = e?.reason || e?.message || 'Withdraw failed';
+    if (msg.includes('user rejected')) showToast('Rejected in wallet','error');
+    else showToast(msg.slice(0,80),'error');
+  }
+}
+
+function openHistory() { window.location='/?history=1'; }
+
+function showToast(msg,type='info') {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className=`toast ${type} show`;
+  setTimeout(()=>{t.className='toast';},3500);
+}
+
+(async()=>{
+  await loadStats();
+  if (window.ethereum) {
+    const accounts = await window.ethereum.request({method:'eth_accounts'});
+    if (accounts.length>0) {
+      state.wallet   = accounts[0];
+      state.provider = new ethers.BrowserProvider(window.ethereum);
+      state.signer   = await state.provider.getSigner();
+      document.getElementById('walletArea').innerHTML =
+        `<div class="wallet-chip"><div class="wallet-dot"></div>${state.wallet.slice(0,6)}...${state.wallet.slice(-4)}</div>`;
+      await loadBalances();
+      await loadYieldBalance();
+    }
+  }
+  updateDepositBtn();
+  updateWithdrawBtn();
+})();
+</script>
+</body>
+</html>

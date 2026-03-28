@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Kudi Arc — Send</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--forest:#0D3B2E;--emerald:#1A6B4A;--jade:#27AE74;--gold:#F5A623;--amber:#E8851A;--cream:#FAF5E9;--charcoal:#1C1C1C;--muted:#7A8B7F;--white:#FFFFFF;--error:#E05C5C;--radius:16px}
+  body{font-family:'DM Sans',sans-serif;background:var(--forest);color:var(--cream);min-height:100vh;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle at 20% 20%,rgba(39,174,116,0.08) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(245,166,35,0.06) 0%,transparent 50%);pointer-events:none;z-index:0}
+  .container{position:relative;z-index:1;max-width:420px;margin:0 auto;padding:0 16px 100px}
+  .header{display:flex;justify-content:space-between;align-items:center;padding:20px 0 16px}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+  .logo-mark{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--amber));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--forest)}
+  .logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--cream)}
+  .logo-text span{color:var(--gold)}
+  .wallet-chip{display:flex;align-items:center;gap:6px;background:rgba(39,174,116,0.12);border:1px solid rgba(39,174,116,0.25);border-radius:20px;padding:5px 10px;font-size:12px;color:var(--jade)}
+  .wallet-dot{width:8px;height:8px;background:var(--jade);border-radius:50%}
+  .page-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--cream);margin-bottom:4px}
+  .page-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
+  .card{background:rgba(250,245,233,0.05);border:1px solid rgba(250,245,233,0.1);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+  .card-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--cream);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .dot{width:6px;height:6px;background:var(--gold);border-radius:50%}
+  .step-num{background:rgba(245,166,35,0.15);border:1px solid rgba(245,166,35,0.25);color:var(--gold);font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+  /* Amount */
+  .amount-wrap{background:rgba(13,59,46,0.6);border:1px solid rgba(250,245,233,0.08);border-radius:12px;padding:14px 16px;margin-bottom:4px}
+  .amount-wrap:focus-within{border-color:rgba(39,174,116,0.4)}
+  .amount-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .amount-label{font-size:11px;color:var(--jade);text-transform:uppercase;letter-spacing:0.8px}
+  .balance-label{font-size:11px;color:var(--muted)}
+  .amount-row{display:flex;align-items:center;gap:10px}
+  .amount-input{flex:1;background:none;border:none;outline:none;color:var(--white);font-family:'Syne',sans-serif;font-size:26px;font-weight:600}
+  .amount-input::placeholder{color:rgba(255,255,255,0.2)}
+  .amount-input::-webkit-inner-spin-button{-webkit-appearance:none}
+  .token-select{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:7px 10px;color:var(--cream);font-size:13px;font-weight:600;cursor:pointer}
+  .preview-text{font-size:12px;color:var(--gold);margin-top:6px}
+
+  /* Country Grid */
+  .country-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .country-opt{background:rgba(13,59,46,0.5);border:1px solid rgba(250,245,233,0.08);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px}
+  .country-opt:hover{border-color:rgba(39,174,116,0.3);background:rgba(13,59,46,0.7)}
+  .country-opt.selected{background:rgba(39,174,116,0.15);border-color:var(--jade)}
+  .country-flag{font-size:20px;line-height:1}
+  .country-info{flex:1;min-width:0}
+  .country-name{font-size:12px;font-weight:600;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .country-rate{font-size:10px;color:var(--muted);margin-top:2px}
+
+  /* Rate Summary */
+  .rate-box{background:rgba(39,174,116,0.08);border:1px solid rgba(39,174,116,0.15);border-radius:12px;padding:12px 14px;margin-bottom:12px;display:none}
+  .rate-box.show{display:block}
+  .rate-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+  .rate-row:last-child{margin-bottom:0;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06);font-size:13px;font-weight:600}
+  .rate-lbl{color:var(--muted)}
+  .rate-val{color:var(--cream)}
+  .rate-val.green{color:var(--jade)}
+
+  /* Method */
+  .method-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+  .method-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all 0.2s}
+  .method-btn.active{background:rgba(39,174,116,0.15);border-color:var(--jade)}
+  .method-icon{font-size:22px;margin-bottom:4px}
+  .method-label{font-size:12px;font-weight:600;color:var(--cream)}
+  .method-sub{font-size:10px;color:var(--muted);margin-top:2px}
+
+  /* Fields */
+  .field{margin-bottom:10px}
+  .field-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:5px}
+  .field-input{width:100%;background:rgba(13,59,46,0.6);border:1px solid rgba(250,245,233,0.08);border-radius:10px;padding:12px 14px;color:var(--cream);font-size:14px;outline:none;transition:border-color 0.2s}
+  .field-input:focus{border-color:rgba(39,174,116,0.4)}
+  .field-input::placeholder{color:rgba(255,255,255,0.2)}
+  select.field-input option{background:#0D3B2E;color:var(--cream)}
+
+  /* Confirm Modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:80;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s}
+  .modal-overlay.show{opacity:1;pointer-events:all}
+  .modal{background:#0D3B2E;border-top:2px solid rgba(39,174,116,0.4);border-radius:20px 20px 0 0;padding:24px 16px 40px;width:100%;max-width:420px;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.1,0.64,1)}
+  .modal-overlay.show .modal{transform:translateY(0)}
+  .modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--cream);margin-bottom:4px}
+  .modal-sub{font-size:12px;color:var(--muted);margin-bottom:20px}
+  .modal-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+  .modal-row:last-of-type{border:none}
+  .modal-label{font-size:12px;color:var(--muted)}
+  .modal-value{font-size:13px;font-weight:600;color:var(--cream);text-align:right;max-width:60%}
+  .modal-value.big{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--gold)}
+  .modal-warn{background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.2);border-radius:10px;padding:10px 12px;font-size:11px;color:var(--gold);margin:14px 0;line-height:1.5}
+  .modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+  .btn-cancel{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--muted);font-family:'Syne',sans-serif;font-size:14px;font-weight:600;padding:14px;border-radius:12px;cursor:pointer}
+  .btn-confirm{background:linear-gradient(135deg,var(--gold),var(--amber));border:none;color:var(--forest);font-family:'Syne',sans-serif;font-size:14px;font-weight:800;padding:14px;border-radius:12px;cursor:pointer}
+
+  /* Send Button */
+  .send-btn{width:100%;background:linear-gradient(135deg,var(--jade),var(--emerald));border:none;border-radius:14px;color:var(--white);font-family:'Syne',sans-serif;font-size:15px;font-weight:700;padding:16px;cursor:pointer;margin-top:4px;transition:all 0.2s;box-shadow:0 4px 20px rgba(39,174,116,0.25)}
+  .send-btn:hover{transform:translateY(-1px)}
+  .send-btn:disabled{background:rgba(255,255,255,0.08);color:var(--muted);cursor:not-allowed;box-shadow:none;transform:none}
+
+  /* Status Screens */
+  .status-screen{display:none;text-align:center;padding:40px 20px}
+  .status-screen.show{display:block}
+  .status-icon{font-size:56px;margin-bottom:12px}
+  .status-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px}
+  .status-msg{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px}
+  .status-ref{background:rgba(39,174,116,0.08);border:1px solid rgba(39,174,116,0.15);border-radius:10px;padding:10px;font-size:11px;color:var(--jade);word-break:break-all;margin-bottom:16px}
+  .status-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .btn-outline{background:none;border:1px solid rgba(39,174,116,0.3);color:var(--jade);font-family:'Syne',sans-serif;font-size:13px;font-weight:600;padding:10px 20px;border-radius:12px;cursor:pointer}
+
+  /* How It Works */
+  .how-card{background:rgba(250,245,233,0.03);border:1px solid rgba(250,245,233,0.07);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+  .how-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--cream);margin-bottom:12px}
+  .how-step{display:flex;gap:12px;margin-bottom:10px}
+  .how-num{width:24px;height:24px;background:rgba(39,174,116,0.15);border:1px solid rgba(39,174,116,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--jade);flex-shrink:0;margin-top:1px}
+  .how-text{font-size:12px;color:rgba(250,245,233,0.7);line-height:1.5}
+  .how-text strong{color:var(--cream)}
+
+  /* Bottom Nav */
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,59,46,0.95);backdrop-filter:blur(20px);border-top:1px solid rgba(250,245,233,0.08);display:flex;justify-content:space-around;padding:10px 0 20px;z-index:50}
+  .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--muted);font-size:10px;font-weight:500;padding:4px 16px}
+  .nav-item.active{color:var(--jade)}
+  .nav-icon{font-size:20px}
+
+  /* Toast + Spinner */
+  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--charcoal);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 20px;font-size:13px;max-width:340px;width:calc(100% - 32px);text-align:center;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);z-index:100}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .toast.success{border-color:var(--jade);color:var(--jade)}
+  .toast.error{border-color:var(--error);color:var(--error)}
+  .toast.info{border-color:var(--gold);color:var(--gold)}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.2);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:8px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .card{animation:fadeUp 0.3s ease both}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <a href="/" class="logo">
+      <div class="logo-mark">K</div>
+      <div class="logo-text">Kudi<span>Arc</span></div>
+    </a>
+    <div id="walletArea">
+      <button onclick="connectWallet()" style="background:rgba(39,174,116,0.15);border:1px solid rgba(39,174,116,0.3);color:var(--jade);font-size:13px;padding:8px 14px;border-radius:20px;cursor:pointer">Connect</button>
+    </div>
+  </header>
+
+  <!-- Main Form -->
+  <div id="mainForm">
+    <div class="page-title">Send Money</div>
+    <div class="page-sub">Send USDC or EURC — recipient gets local cash in minutes</div>
+
+    <!-- Step 1: Amount + Token -->
+    <div class="card">
+      <div class="card-title"><div class="step-num">1</div>You Send</div>
+      <div class="amount-wrap">
+        <div class="amount-top">
+          <div class="amount-label">Amount</div>
+          <div class="balance-label" id="sendBalance">Balance: —</div>
+        </div>
+        <div class="amount-row">
+          <input type="number" class="amount-input" id="sendAmount" placeholder="0.00" oninput="updateSummary()">
+          <select class="token-select" id="sendToken" onchange="updateSummary()">
+            <option value="USDC">USDC</option>
+            <option value="EURC">EURC</option>
+          </select>
+        </div>
+        <div class="preview-text" id="localPreview">≈ 0 local currency</div>
+      </div>
+    </div>
+
+    <!-- Step 2: Country -->
+    <div class="card">
+      <div class="card-title"><div class="step-num">2</div>Recipient Country</div>
+      <div class="country-grid" id="countryGrid">
+        <div style="color:var(--muted);font-size:12px;grid-column:span 2;padding:8px 0">Loading countries...</div>
+      </div>
+    </div>
+
+    <!-- Live Rate Box -->
+    <div class="rate-box" id="rateBox">
+      <div class="rate-row">
+        <span class="rate-lbl">Exchange rate</span>
+        <span class="rate-val green" id="rateInfo">—</span>
+      </div>
+      <div class="rate-row">
+        <span class="rate-lbl">You send</span>
+        <span class="rate-val" id="rateSend">—</span>
+      </div>
+      <div class="rate-row">
+        <span class="rate-lbl">Fee (0.30%)</span>
+        <span class="rate-val" id="rateFee">—</span>
+      </div>
+      <div class="rate-row">
+        <span class="rate-lbl">Recipient gets</span>
+        <span class="rate-val green" id="rateReceive">—</span>
+      </div>
+    </div>
+
+    <!-- Step 3: Delivery -->
+    <div class="card">
+      <div class="card-title"><div class="step-num">3</div>Delivery Method</div>
+      <div class="method-grid">
+        <div class="method-btn active" id="btnBank" onclick="setMethod('bank')">
+          <div class="method-icon">🏦</div>
+          <div class="method-label">Bank Account</div>
+          <div class="method-sub">Direct deposit</div>
+        </div>
+        <div class="method-btn" id="btnMobile" onclick="setMethod('mobile')">
+          <div class="method-icon">📱</div>
+          <div class="method-label">Mobile Money</div>
+          <div class="method-sub">Phone number</div>
+        </div>
+      </div>
+
+      <!-- Bank Fields -->
+      <div id="bankFields">
+        <div class="field">
+          <div class="field-label">Bank</div>
+          <select class="field-input" id="bankSelect" onchange="updateSummary()">
+            <option value="">Select bank...</option>
+          </select>
+        </div>
+        <div class="field">
+          <div class="field-label">Account Number</div>
+          <input type="number" class="field-input" id="accountNumber" placeholder="0123456789" oninput="updateSummary()">
+        </div>
+        <div class="field">
+          <div class="field-label">Account Name</div>
+          <input type="text" class="field-input" id="accountName" placeholder="John Doe" oninput="updateSummary()">
+        </div>
+      </div>
+
+      <!-- Mobile Fields -->
+      <div id="mobileFields" style="display:none">
+        <div class="field">
+          <div class="field-label">Recipient Name</div>
+          <input type="text" class="field-input" id="mobileName" placeholder="John Doe" oninput="updateSummary()">
+        </div>
+        <div class="field">
+          <div class="field-label">Phone Number</div>
+          <input type="tel" class="field-input" id="mobilePhone" placeholder="+2348012345678" oninput="updateSummary()">
+        </div>
+      </div>
+    </div>
+
+    <button class="send-btn" id="sendBtn" onclick="handleSend()" disabled>Select country & enter details</button>
+
+    <!-- How It Works -->
+    <div class="how-card">
+      <div class="how-title">📖 How Kudi Arc Send Works</div>
+      <div class="how-step">
+        <div class="how-num">1</div>
+        <div class="how-text"><strong>Send USDC or EURC</strong> from your wallet on Arc Testnet. Gas fees are paid in USDC — near zero cost.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">2</div>
+        <div class="how-text"><strong>Choose recipient country</strong> — live exchange rates shown for Nigeria, Kenya, Ghana, Senegal, Cameroon, and more.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">3</div>
+        <div class="how-text"><strong>Enter recipient details</strong> — bank account or mobile money number. We support GTBank, OPay, M-Pesa, MTN MoMo, Wave and more.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">4</div>
+        <div class="how-text"><strong>Sign in your wallet</strong> — your USDC is approved and the transfer is authorized cryptographically. No passwords needed.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">5</div>
+        <div class="how-text"><strong>Recipient gets cash</strong> — NGN, KES, GHS, XOF, FCFA lands in their bank or mobile wallet within minutes on mainnet.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Processing Screen -->
+  <div class="status-screen" id="processingScreen">
+    <div class="status-icon">⏳</div>
+    <div class="status-title" style="color:var(--gold)">Processing...</div>
+    <div class="status-msg" id="processingMsg">Waiting for wallet signature...</div>
+    <div style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px"></div>
+  </div>
+
+  <!-- Success Screen -->
+  <div class="status-screen" id="successScreen">
+    <div class="status-icon">✅</div>
+    <div class="status-title" style="color:var(--jade)">Transfer Sent!</div>
+    <div class="status-msg" id="successMsg"></div>
+    <div class="status-ref" id="successRef"></div>
+    <div class="status-actions">
+      <button class="btn-outline" onclick="resetForm()">Send Another</button>
+      <button class="btn-outline" onclick="window.location='/'">Back to Swap</button>
+    </div>
+  </div>
+
+  <!-- Failed Screen -->
+  <div class="status-screen" id="failedScreen">
+    <div class="status-icon">❌</div>
+    <div class="status-title" style="color:var(--error)">Transfer Failed</div>
+    <div class="status-msg" id="failedMsg"></div>
+    <div class="status-actions">
+      <button class="btn-outline" onclick="showMain()">Try Again</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirmOverlay">
+  <div class="modal">
+    <div class="modal-title">Confirm Transfer</div>
+    <div class="modal-sub">Review carefully before signing in your wallet</div>
+    <div class="modal-row"><span class="modal-label">You send</span><span class="modal-value big" id="mSend">—</span></div>
+    <div class="modal-row"><span class="modal-label">Recipient gets</span><span class="modal-value big" style="color:var(--jade)" id="mReceive">—</span></div>
+    <div class="modal-row"><span class="modal-label">Country</span><span class="modal-value" id="mCountry">—</span></div>
+    <div class="modal-row"><span class="modal-label">Rate</span><span class="modal-value" id="mRate">—</span></div>
+    <div class="modal-row"><span class="modal-label">Fee (0.30%)</span><span class="modal-value" id="mFee">—</span></div>
+    <div class="modal-row"><span class="modal-label">Recipient</span><span class="modal-value" id="mRecipient">—</span></div>
+    <div class="modal-row"><span class="modal-label">Via</span><span class="modal-value" id="mBank">—</span></div>
+    <div class="modal-warn">⚠️ You will sign 2 steps in your wallet: (1) Approve USDC, (2) Authorize transfer. This is cryptographic proof of your intent.</div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-confirm" onclick="executeSign()">Sign & Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <a href="/" class="nav-item"><div class="nav-icon">⇄</div><span>Swap</span></a>
+  <a href="/send.html" class="nav-item active"><div class="nav-icon">📤</div><span>Send</span></a>
+  <a href="/yield.html" class="nav-item"><div class="nav-icon">📈</div><span>Yield</span></a>
+  <a href="#" class="nav-item" onclick="window.location='/?history=1'"><div class="nav-icon">📋</div><span>History</span></a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API          = 'http://129.80.199.123';
+const USDC_ADDR    = '0x3600000000000000000000000000000000000000';
+const EURC_ADDR    = '0x89B50855Aa3bE2F677cD6303Cec089B5F319D72a';
+const KUDI_CONTRACT= '0x8a10D0e61201000B5456EC725165892B08832C5f';
+const ERC20_ABI    = [
+  'function balanceOf(address) view returns (uint256)',
+  'function approve(address,uint256) returns (bool)',
+];
+
+let state = {
+  wallet:null, provider:null, signer:null,
+  method:'bank', countries:[], selectedCountry:null,
+  nigeriaBanks:[], pendingPayload:null,
+  balances:{usdc:0, eurc:0}
+};
+
+// ── Wallet ────────────────────────────────────────────────────
+async function connectWallet() {
+  if (!window.ethereum) { showToast('Install MetaMask or Rabby','error'); return; }
+  try {
+    try { await window.ethereum.request({method:'wallet_addEthereumChain',params:[{chainId:'0x4CEF52',chainName:'Arc Testnet',nativeCurrency:{name:'USDC',symbol:'USDC',decimals:18},rpcUrls:['https://rpc.testnet.arc.network'],blockExplorerUrls:['https://testnet.arcscan.app']}]}); } catch(e) {}
+    try { await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x4CEF52'}]}); } catch(e) {}
+    const accounts   = await window.ethereum.request({method:'eth_requestAccounts'});
+    state.wallet     = accounts[0];
+    state.provider   = new ethers.BrowserProvider(window.ethereum);
+    state.signer     = await state.provider.getSigner();
+    document.getElementById('walletArea').innerHTML =
+      `<div class="wallet-chip"><div class="wallet-dot"></div>${state.wallet.slice(0,6)}...${state.wallet.slice(-4)}</div>`;
+    await loadBalances();
+    updateSummary();
+    showToast('Wallet connected ✓','success');
+  } catch(e) { showToast('Connection failed: '+(e.message||e),'error'); }
+}
+
+async function loadBalances() {
+  if (!state.wallet || !state.provider) return;
+  try {
+    const usdc = new ethers.Contract(USDC_ADDR, ERC20_ABI, state.provider);
+    const eurc = new ethers.Contract(EURC_ADDR, ERC20_ABI, state.provider);
+    const uBal = await usdc.balanceOf(state.wallet);
+    const eBal = await eurc.balanceOf(state.wallet);
+    state.balances.usdc = Number(uBal)/1e6;
+    state.balances.eurc = Number(eBal)/1e6;
+    updateBalanceDisplay();
+  } catch(e) {}
+}
+
+function updateBalanceDisplay() {
+  const token = document.getElementById('sendToken')?.value || 'USDC';
+  const bal   = token==='USDC' ? state.balances.usdc : state.balances.eurc;
+  document.getElementById('sendBalance').textContent = `Balance: ${bal.toFixed(2)} ${token}`;
+}
+
+// ── Countries ────────────────────────────────────────────────
+async function loadCountries() {
+  try {
+    const res  = await fetch(`${API}/api/countries`);
+    const data = await res.json();
+    state.countries = data.countries;
+    renderCountries();
+  } catch(e) { console.warn('Countries failed'); }
+}
+
+function renderCountries() {
+  const grid  = document.getElementById('countryGrid');
+  const token = document.getElementById('sendToken')?.value || 'USDC';
+  grid.innerHTML = state.countries.map(c => {
+    const rate = token==='USDC' ? c.rate_per_usd : c.rate_per_eurc;
+    return `<div class="country-opt ${state.selectedCountry?.code===c.code?'selected':''}"
+      onclick="selectCountry('${c.code}')">
+      <div class="country-flag">${c.flag}</div>
+      <div class="country-info">
+        <div class="country-name">${c.name}</div>
+        <div class="country-rate">1 ${token} = ${c.symbol}${parseFloat(rate).toLocaleString(undefined,{maximumFractionDigits:1})}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectCountry(code) {
+  state.selectedCountry = state.countries.find(c => c.code===code);
+  renderCountries();
+  const sel = document.getElementById('bankSelect');
+  sel.innerHTML = '<option value="">Select bank...</option>';
+  if (code==='NG') {
+    state.nigeriaBanks.forEach(b => {
+      const o=document.createElement('option'); o.value=b.code; o.textContent=b.name; o.dataset.name=b.name; sel.appendChild(o);
+    });
+  } else {
+    [{code:'local_bank',name:'Local Bank Transfer'},{code:'mobile_money',name:'Mobile Money'},
+     {code:'mpesa',name:'M-Pesa'},{code:'mtn_momo',name:'MTN Mobile Money'},
+     {code:'airtel',name:'Airtel Money'},{code:'wave',name:'Wave'},
+     {code:'orange',name:'Orange Money'},{code:'moov',name:'Moov Money'}].forEach(b => {
+      const o=document.createElement('option'); o.value=b.code; o.textContent=b.name; o.dataset.name=b.name; sel.appendChild(o);
+    });
+  }
+  updateSummary();
+}
+
+// ── Banks ─────────────────────────────────────────────────────
+async function loadBanks() {
+  try {
+    const res  = await fetch(`${API}/api/banks`);
+    const data = await res.json();
+    state.nigeriaBanks = data.banks;
+    const sel  = document.getElementById('bankSelect');
+    data.banks.forEach(b => {
+      const o=document.createElement('option'); o.value=b.code; o.textContent=b.name; o.dataset.name=b.name; sel.appendChild(o);
+    });
+  } catch(e) {}
+}
+
+// ── Method ────────────────────────────────────────────────────
+function setMethod(m) {
+  state.method=m;
+  document.getElementById('bankFields').style.display  =m==='bank'  ?'block':'none';
+  document.getElementById('mobileFields').style.display=m==='mobile'?'block':'none';
+  document.getElementById('btnBank').classList.toggle('active',  m==='bank');
+  document.getElementById('btnMobile').classList.toggle('active',m==='mobile');
+  updateSummary();
+}
+
+// ── Summary ───────────────────────────────────────────────────
+function updateSummary() {
+  updateBalanceDisplay();
+  renderCountries();
+  const amount  = parseFloat(document.getElementById('sendAmount').value)||0;
+  const token   = document.getElementById('sendToken')?.value||'USDC';
+  const country = state.selectedCountry;
+  const rate    = country?(token==='USDC'?country.rate_per_usd:country.rate_per_eurc):0;
+  const sym     = country?country.symbol:'';
+  const cur     = country?country.currency:'';
+  const fee     = amount*0.003;
+  const payout  = (amount-fee)*rate;
+
+  document.getElementById('localPreview').textContent = amount>0&&country
+    ? `≈ ${sym}${payout.toLocaleString(undefined,{maximumFractionDigits:0})} ${cur}`
+    : '≈ 0 local currency';
+
+  const rateBox=document.getElementById('rateBox');
+  if (amount>0&&country) {
+    rateBox.classList.add('show');
+    document.getElementById('rateInfo').textContent   =`1 ${token} = ${sym}${parseFloat(rate).toLocaleString(undefined,{maximumFractionDigits:2})} ${cur}`;
+    document.getElementById('rateSend').textContent   =`${amount} ${token}`;
+    document.getElementById('rateFee').textContent    =`${fee.toFixed(4)} ${token}`;
+    document.getElementById('rateReceive').textContent=`${sym}${payout.toLocaleString(undefined,{maximumFractionDigits:0})} ${cur}`;
+  } else { rateBox.classList.remove('show'); }
+
+  const ready = amount>0 && country && isRecipientReady();
+  const btn   = document.getElementById('sendBtn');
+  btn.disabled = !ready||!state.wallet;
+  btn.textContent = !state.wallet?'Connect Wallet First'
+    : !country?'Select recipient country'
+    : !ready?'Enter recipient details'
+    : `Review Transfer → ${sym}${payout.toLocaleString(undefined,{maximumFractionDigits:0})} ${cur}`;
+}
+
+function isRecipientReady() {
+  if (state.method==='bank') {
+    return document.getElementById('bankSelect').value &&
+           document.getElementById('accountNumber').value.length>=8 &&
+           document.getElementById('accountName').value.length>2;
+  }
+  return document.getElementById('mobileName').value.length>2 &&
+         document.getElementById('mobilePhone').value.length>=10;
+}
+
+// ── Send Flow ─────────────────────────────────────────────────
+function handleSend() {
+  if (!state.wallet) { connectWallet(); return; }
+  const amount  = parseFloat(document.getElementById('sendAmount').value)||0;
+  const token   = document.getElementById('sendToken')?.value||'USDC';
+  const country = state.selectedCountry;
+  if (!amount||!country) return;
+
+  // Balance check
+  const bal = token==='USDC'?state.balances.usdc:state.balances.eurc;
+  if (amount>bal) { showToast(`Insufficient ${token}. You have ${bal.toFixed(2)}`,'error'); return; }
+
+  const rate   = token==='USDC'?country.rate_per_usd:country.rate_per_eurc;
+  const fee    = amount*0.003;
+  const payout = (amount-fee)*rate;
+  const sym    = country.symbol;
+  const cur    = country.currency;
+
+  let recipient='', bank='';
+  if (state.method==='bank') {
+    const sel=document.getElementById('bankSelect');
+    recipient=document.getElementById('accountName').value;
+    bank=sel.options[sel.selectedIndex]?.dataset?.name||sel.options[sel.selectedIndex]?.text||'';
+    state.pendingPayload={wallet:state.wallet,amount_usdc:amount,token,country_code:country.code,
+      currency:cur,bank_code:sel.value,bank_name:bank,
+      account_number:document.getElementById('accountNumber').value,
+      account_name:recipient,recipient_name:recipient,method:'bank'};
+  } else {
+    recipient=document.getElementById('mobileName').value;
+    bank='Mobile Money';
+    state.pendingPayload={wallet:state.wallet,amount_usdc:amount,token,country_code:country.code,
+      currency:cur,recipient_name:recipient,
+      phone:document.getElementById('mobilePhone').value,method:'mobile'};
+  }
+
+  document.getElementById('mSend').textContent     =`${amount} ${token}`;
+  document.getElementById('mReceive').textContent  =`${sym}${payout.toLocaleString(undefined,{maximumFractionDigits:0})} ${cur}`;
+  document.getElementById('mCountry').textContent  =`${country.flag} ${country.name}`;
+  document.getElementById('mRate').textContent     =`1 ${token} = ${sym}${parseFloat(rate).toFixed(2)} ${cur}`;
+  document.getElementById('mFee').textContent      =`${fee.toFixed(4)} ${token}`;
+  document.getElementById('mRecipient').textContent=recipient;
+  document.getElementById('mBank').textContent     =bank;
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+
+function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('show'); }
+
+async function executeSign() {
+  closeConfirm();
+  showStatus('processing');
+  document.getElementById('processingMsg').textContent='Requesting wallet signature...';
+  const amount = state.pendingPayload.amount_usdc;
+  const token  = state.pendingPayload.token||'USDC';
+  const tokenAddr = token==='USDC'?USDC_ADDR:EURC_ADDR;
+  const amountWei = BigInt(Math.floor(amount*1_000_000));
+
+  try {
+    const tokenContract = new ethers.Contract(tokenAddr, ERC20_ABI, state.signer);
+
+    // Step 1: Balance check onchain
+    document.getElementById('processingMsg').textContent='Verifying balance...';
+    const bal = await tokenContract.balanceOf(state.wallet);
+    if (BigInt(bal)<amountWei) {
+      showStatus('failed');
+      document.getElementById('failedMsg').textContent=`Insufficient ${token} balance.`;
+      return;
+    }
+
+    // Step 2: Approve
+    document.getElementById('processingMsg').textContent='Step 1/2: Approve in wallet...';
+    const approveTx = await tokenContract.approve(KUDI_CONTRACT, amountWei);
+    document.getElementById('processingMsg').textContent='Step 1/2: Confirming approval...';
+    await approveTx.wait();
+
+    // Step 3: Sign message
+    document.getElementById('processingMsg').textContent='Step 2/2: Sign transfer authorization...';
+    const msg = `KudiArc Transfer\nAmount: ${amount} ${token}\nTo: ${state.pendingPayload.recipient_name}\nCountry: ${state.pendingPayload.country_code}\nTime: ${Date.now()}`;
+    const sig = await state.signer.signMessage(msg);
+
+    // Step 4: Submit
+    document.getElementById('processingMsg').textContent='Processing payout...';
+    const res  = await fetch(`${API}/api/send/payout`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({...state.pendingPayload, signature:sig, approve_tx:approveTx.hash})
+    });
+    const data = await res.json();
+
+    if (data.status&&(data.status.includes('success')||data.status==='pending')) {
+      showStatus('success');
+      const country = state.selectedCountry;
+      document.getElementById('successMsg').textContent =
+        `${country?.symbol||''}${data.payout_amount?.toLocaleString()||''} ${data.currency||''} is being sent to ${state.pendingPayload.recipient_name}. ${data.message||''}`;
+      document.getElementById('successRef').textContent =
+        `Reference: ${data.reference}\nApproval TX: ${approveTx.hash.slice(0,22)}...`;
+    } else {
+      throw new Error(data.error||'Backend error');
+    }
+  } catch(e) {
+    const msg=e?.reason||e?.message||'Failed';
+    showStatus('failed');
+    document.getElementById('failedMsg').textContent =
+      msg.includes('user rejected')||msg.includes('User denied')
+        ?'You rejected the transaction in your wallet.'
+        :msg.slice(0,120);
+  }
+}
+
+function showStatus(type) {
+  ['mainForm','processingScreen','successScreen','failedScreen'].forEach(id => {
+    const el=document.getElementById(id);
+    if (id==='mainForm') el.style.display=type?'none':'block';
+    else el.classList.toggle('show', id===type+'Screen');
+  });
+}
+
+function showMain() {
+  document.getElementById('mainForm').style.display='block';
+  ['processingScreen','successScreen','failedScreen'].forEach(id=>document.getElementById(id).classList.remove('show'));
+}
+
+function resetForm() {
+  showMain();
+  document.getElementById('sendAmount').value='';
+  document.getElementById('accountNumber').value='';
+  document.getElementById('accountName').value='';
+  document.getElementById('bankSelect').value='';
+  document.getElementById('mobileName').value='';
+  document.getElementById('mobilePhone').value='';
+  state.selectedCountry=null;
+  renderCountries();
+  updateSummary();
+}
+
+function showToast(msg,type='info') {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className=`toast ${type} show`;
+  setTimeout(()=>{t.className='toast';},3500);
+}
+
+(async()=>{
+  await Promise.all([loadBanks(), loadCountries()]);
+  if (window.ethereum) {
+    const accounts=await window.ethereum.request({method:'eth_accounts'});
+    if (accounts.length>0) {
+      state.wallet  =accounts[0];
+      state.provider=new ethers.BrowserProvider(window.ethereum);
+      state.signer  =await state.provider.getSigner();
+      document.getElementById('walletArea').innerHTML=
+        `<div class="wallet-chip"><div class="wallet-dot"></div>${state.wallet.slice(0,6)}...${state.wallet.slice(-4)}</div>`;
+      await loadBalances();
+    }
+  }
+  updateSummary();
+})();
+</script>
+</body>
+</html>
