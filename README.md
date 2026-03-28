@@ -5,9 +5,9 @@
 ### Kudi Arc is a hybrid on-chain FX desk and remittance engine for Africa.
 
 **It combines:**
-On-chain stablecoin swaps
-Off-chain fiat settlement
-Yield on idle balances
+On-chain stablecoin swaps,
+Off-chain fiat settlement,
+Yield on idle balances.
 
 **Built on Arc Network · Powered by Circle USDC & EURC**
 
