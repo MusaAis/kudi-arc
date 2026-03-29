@@ -8,7 +8,7 @@
 
 ## Abstract
 
-Kudi Arc is a stablecoin FX and remittance protocol built on Arc Network — the first EVM-compatible blockchain that uses USDC as its native gas token. By leveraging Arc's unique infrastructure, Kudi Arc eliminates the traditional barriers to African financial access: high remittance fees, forex scarcity, and the complexity of managing multiple crypto assets just to pay for gas.
+Kudi Arc is a hybrid on-chain FX desk and remittance engine for Africa🌍 — the first EVM-compatible blockchain that uses USDC as its native gas token. By leveraging Arc's unique infrastructure, Kudi Arc eliminates the traditional barriers to African financial access: high remittance fees, forex scarcity, and the complexity of managing multiple crypto assets just to pay for gas.
 
 ---
 
