@@ -8,7 +8,7 @@ Version 1.0 · March 2026 · Arc Testnet (Mainnet Pending)
 
 Built on Arc Network · Powered by Circle USDC & EURC
 
-*github.com/KudiArc/kudi-arc · \@KudiArc · discord.gg/kudiarc*
+*github.com/KudiArc/kudi-arc · \@KudiArc · discord.gg/nEJfqrAsqc*
 
 **Table of Contents**
 
