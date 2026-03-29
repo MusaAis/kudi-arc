@@ -532,4 +532,4 @@ await tx.wait();
 
 ---
 
-*For integration support, open an issue at [github.com/KudiArc/kudi-arc](https://github.com/KudiArc/kudi-arc) or join [discord.gg/kudiarc](https://discord.gg/kudiarc).*
+*For integration support, open an issue at [github.com/KudiArc/kudi-arc](https://github.com/KudiArc/kudi-arc) or join [discord.gg/kudiarc](https://discord.gg/nEJfqrAsqc).*
