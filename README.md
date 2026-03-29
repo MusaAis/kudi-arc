@@ -290,7 +290,7 @@ MIT License — see [LICENSE](LICENSE) for details.
 Built by **Musa AIS**
 
 - X: [@KudiArc](https://twitter.com/KudiArc)
-- Discord: [discord.gg/kudiarc](https://discord.gg/kudiarc)
+- Discord: [discord.gg/kudiarc](https://discord.gg/nEJfqrAsqc)
 
 ---
 
