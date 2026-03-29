@@ -116,7 +116,7 @@ Arc Network's USDC-as-gas design makes it the perfect infrastructure for Africa 
 
 ---
 
-## 📊 Live Stats (Arc Testnet)
+## 📊 Live Stats (Arc Testnet) on 28 Mar 2026
 
 | Metric | Value |
 |---|---|
@@ -296,7 +296,7 @@ Built by **Musa AIS**
 
 <div align="center">
 
-**Built on Arc Network**
+**Built in Africa**
 
 *Kudi means money. Arc means infrastructure. Together — financial freedom for Africa.*
 
