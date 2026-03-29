@@ -195,7 +195,7 @@ The UI is English-only. Adding language support for Hausa (Northern Nigeria), Sw
 
 ## Community
 
-- **Discord:** [discord.gg/kudiarc](https://discord.gg/kudiarc)
+- **Discord:** [discord.gg/kudiarc](https://discord.gg/nEJfqrAsqc)
 - **Twitter/X:** [@KudiArc](https://twitter.com/KudiArc)
 - **GitHub Issues:** For bugs and feature requests
 
