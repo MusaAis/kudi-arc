@@ -8,7 +8,7 @@
 [![Contract](https://img.shields.io/badge/Contract-Verified-27AE74?style=for-the-badge)](https://testnet.arcscan.app/address/0x8a10D0e61201000B5456EC725165892B08832C5f)
 [![Audit](https://img.shields.io/badge/Security%20Audit-SolidityScan-F5A623?style=for-the-badge)](https://solidityscan.com)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](./LICENSE)
-[![Discord](https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge)](https://discord.gg/kudiarc)
+[![Discord](https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge)](https://discord.gg/nEJfqrAsqc)
 
 ---
 
