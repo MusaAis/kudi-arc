@@ -153,7 +153,7 @@ We solve three structural failures in African finance:
 
 ### Use the dApp
 
-1. Visit **[http://129.80.199.123](http://129.80.199.123)** (testnet)
+1. Visit **[https://kudiarc.xyz](https://kudiarc.xyz)** (testnet)
 2. Click **Connect Wallet** — Arc Testnet is added automatically
 3. Get testnet USDC from [faucet.circle.com](https://faucet.circle.com)
 4. Start swapping, sending, or depositing for yield
