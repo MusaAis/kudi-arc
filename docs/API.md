@@ -1,6 +1,6 @@
 # Kudi Arc — API Reference
 
-**Base URL (Testnet):** `http://129.80.199.123`  
+**Base URL (Testnet):** `https://kudiarc.xyz`  
 **Base URL (Mainnet):** `https://api.kudiarc.xyz` *(Q3 2026)*  
 **Version:** v1  
 **Protocol:** HTTP/REST  
@@ -260,7 +260,7 @@ Initiates a crypto-to-fiat remittance. The user must sign a message with their w
 
 **cURL Example**
 ```bash
-curl -X POST http://129.80.199.123/api/send/payout \
+curl -X POST https://kudiarc.xyz/api/send/payout \
   -H "Content-Type: application/json" \
   -d '{
     "wallet": "0x7B77...",
