@@ -87,7 +87,7 @@ GET /api/rates
 
 **cURL Example**
 ```bash
-curl http://129.80.199.123/api/rates
+curl https://kudiarc.xyz/api/rates
 ```
 
 ---
