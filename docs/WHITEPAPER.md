@@ -97,8 +97,6 @@ Integration with Circle's USYC — a tokenized money market fund backed by short
 - No lock-up period — withdrawals processed on demand
 - Earnings displayed in NGN equivalent to provide local context
 
-> ⚠️ **Note:** USYC access requires Circle allowlist approval. Kudi Arc has applied and approval is pending. Until approved, the yield tab displays estimated returns but deposits are not live.
-
 ---
 
 ## 3. Competitive Landscape
@@ -401,12 +399,12 @@ Kudi Arc launches as a centralized protocol with a clear, time-bound path toward
 |-----------|--------|
 | KudiSwap V2 deployed & verified on Arcscan | ✅ Complete |
 | 10-country remittance support (KudiSend) | ✅ Complete |
-| USYC yield integration (KudiYield) | ✅ Complete — pending Circle allowlist |
+| USYC yield integration (KudiYield) | ✅ Complete |
 | Transaction history per wallet | ✅ Complete |
 | SolidityScan security audit | ✅ Complete |
 | Bitnob API integration (NGN live) | ✅ Complete |
 | Flutterwave API integration | ⏳ In Progress — Q1 2026 |
-| Circle USYC allowlist approval | ⏳ Pending — applied |
+| Circle USYC allowlist approval | Approved |
 | User beta testing program | ⏳ In Progress |
 
 ### Mainnet — Q3 2026
@@ -415,7 +413,7 @@ Kudi Arc launches as a centralized protocol with a clear, time-bound path toward
 |-----------|--------|
 | Arc Mainnet deployment | Q3 2026 |
 | Real NGN/KES/GHS/XOF live payouts | Q3 2026 |
-| Custom domain + SSL + CDN | Q3 2026 |
+| SSL + CDN | Q3 2026 |
 | PostgreSQL migration (replace SQLite) | Q3 2026 |
 | 3-of-5 multisig ownership transfer | Q3 2026 |
 | Third-party smart contract audit | Q2 2026 (pre-mainnet) |
