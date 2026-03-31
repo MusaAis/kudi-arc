@@ -129,7 +129,7 @@ We solve three structural failures in African finance:
 │  Payout routing    │   │                                      │
 │  TX history DB     │   │  ✅ Reentrancy Guard                 │
 │  Webhook handler   │   │  ✅ Rate Timelock (5 min)            │
-│  Oracle Cloud VM   │   │  ✅ Withdrawal Timelock (24hr)       │
+│                    │   │  ✅ Withdrawal Timelock (24hr)       │
 │  Nginx + Gunicorn  │   │  ✅ Rate Bounds (±20%, abs 0.5–2.0) │
 └─────────┬──────────┘   │  ✅ SafeERC20 · Two-step Ownership  │
           │               └──────────────────────────────────────┘
