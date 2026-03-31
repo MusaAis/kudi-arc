@@ -4,7 +4,7 @@
 
 **Built on Arc Network · Powered by Circle USDC & EURC**
 
-[![Testnet Demo](https://img.shields.io/badge/Testnet%20Demo-Live-27AE74?style=for-the-badge)](https://kudiarc.xyz/)
+[![Testnet](https://img.shields.io/badge/Testnet%20Live-27AE74?style=for-the-badge)](https://kudiarc.xyz/)
 [![Contract](https://img.shields.io/badge/Contract-Verified-27AE74?style=for-the-badge)](https://testnet.arcscan.app/address/0x8a10D0e61201000B5456EC725165892B08832C5f)
 [![Audit](https://img.shields.io/badge/Security%20Audit-SolidityScan-F5A623?style=for-the-badge)](https://solidityscan.com)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](./LICENSE)
@@ -68,7 +68,6 @@ We solve three structural failures in African finance:
 - Backed by Circle's USYC — tokenized short-duration US Treasury Bills
 - No lock-up — withdraw anytime
 - Earnings shown in NGN equivalent for local context
-- *(Deposits pending Circle USYC allowlist approval)*
 
 ### 📋 Transaction History
 - Full history of swaps and remittances per wallet
@@ -137,7 +136,7 @@ We solve three structural failures in African finance:
 ┌─────────▼──────────────────────────────────────────────────┐
 │                  FIAT SETTLEMENT LAYER                      │
 │  Bitnob (NGN) · Flutterwave (KES/GHS/ZAR/TZS/UGX/RWF)    │
-│  Wave (XOF/XAF) · Webhook callbacks · Reference tracking   │
+│  Flutterwave (XOF/XAF) · Webhook callbacks · Reference tracking   │
 └────────────────────────────────────────────────────────────┘
 ```
 
