@@ -403,7 +403,7 @@ Kudi Arc launches as a centralized protocol with a clear, time-bound path toward
 | Transaction history per wallet | ✅ Complete |
 | SolidityScan security audit | ✅ Complete |
 | Bitnob API integration (NGN live) | ✅ Complete |
-| Flutterwave API integration | ⏳ In Progress — Q1 2026 |
+| Flutterwave API integration | ✅️ Complete |
 | Circle USYC allowlist approval | ✅️ Complete |
 | User beta testing program | ⏳ In Progress |
 
