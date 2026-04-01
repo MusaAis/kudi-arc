@@ -1,3 +1,5 @@
+[🌍 Project Overview](https://intro.kudiarc.xyz)
+
 # 🟡 Kudi Arc
 
 ### Stablecoin FX & Remittance Protocol for Africa — Built on Arc Network
@@ -15,8 +17,6 @@
 > **Swap USDC ↔ EURC · Send to 10 African countries · Earn 4.86% APY via USYC**
 
 ---
-
-[🌍 Project Overview](https://intro.kudiarc.xyz)
 
 ## What is Kudi Arc?
 
