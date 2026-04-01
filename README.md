@@ -16,6 +16,8 @@
 
 ---
 
+[🌍 Project Overview](https://intro.kudiarc.xyz)
+
 ## What is Kudi Arc?
 
 Kudi Arc is an Africa-first stablecoin FX desk and remittance engine built on **Arc Network** — the first blockchain where gas is paid in USDC. No ETH. No friction. Just USDC.
