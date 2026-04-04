@@ -34,16 +34,15 @@ We solve three structural failures in African finance:
 
 ---
 
-## Live Stats — Arc Testnet (27 March 2026)
+## Live Stats — Arc Testnet (March 2026)
 
 | Metric | Value |
 |--------|-------|
-| Total Swaps | 5 |
-| USDC Swapped | 56.07 USDC |
-| EURC Swapped | 31.00 EURC |
-| Fees Collected | 0.26 USDC |
-| USDC Pool | 520.29 USDC |
-| EURC Pool | 400.19 EURC |
+| Total Swaps | 130+ |
+| USDC Swapped | 12925 USDC |
+| EURC Swapped | 1730 EURC |
+| USDC Pool | 21028 USDC |
+| EURC Pool | 1507 EURC |
 | Contract Fee | 0.30% |
 | Network | Arc Testnet (Chain 5042002) |
 
@@ -275,7 +274,7 @@ kudi-arc/
 | Phase 6 | Arc Mainnet + PostgreSQL + Multisig | ⏳ Q3 2026 |
 | Phase 7 | AMM model (x\*y=k) + open liquidity provision | 📋 Q4 2026 |
 | Phase 8 | Chainlink oracle integration | 📋 Q4 2026 |
-| Phase 9 | Multi-chain (Base, Stellar, Polygon) | 📋 2027 |
+| Phase 9 | CCTP, Multi-chain (Base, Stellar, Polygon) | 📋 2027 |
 | Phase 10 | Mobile app (React Native) | 📋 Q1 2027 |
 
 ---
