@@ -1,6 +1,6 @@
 # Kudi Arc — Technical Whitepaper
 
-**Version:** 2.0 &nbsp;|&nbsp; **Date:** March 2026 &nbsp;|&nbsp; **Network:** Arc Testnet (Mainnet: Q3 2026)
+**Version:** 1.0 &nbsp;|&nbsp; **Date:** March 2026 &nbsp;|&nbsp; **Network:** Arc Testnet (Mainnet: Q3 2026)
 
 > Built on Arc Network · Powered by Circle USDC & EURC  
 > [github.com/KudiArc/kudi-arc](https://github.com/KudiArc/kudi-arc) · [@KudiArc](https://twitter.com/KudiArc) · [discord.gg/kudiarc](https://discord.gg/nEJfqrAsqc)
@@ -92,7 +92,7 @@ Supports **10 African countries** at launch; planned expansion to 20+ on mainnet
 Integration with Circle's USYC — a tokenized money market fund backed by short-duration US Treasury Bills, issued directly on Arc Network:
 
 - **Current APY:** 4.86% (variable, tracks Fed Funds Rate)
-- **1 USYC ≈ $1.02 USDC** — accrual-based pricing, not rebase
+- **1 USYC ≈ $1.11 USDC** — accrual-based pricing, not rebase
 - Eligible to non-US institutions (African entities qualify under Circle's allowlist)
 - No lock-up period — withdrawals processed on demand
 - Earnings displayed in NGN equivalent to provide local context
@@ -426,7 +426,7 @@ Kudi Arc launches as a centralized protocol with a clear, time-bound path toward
 | Chainlink oracle integration | Q4 2026 |
 | AMM model (x*y=k) replacing manual rate setting | Q4 2026 |
 | Open liquidity provision + LP token system | Q4 2026 |
-| Multi-chain deployment (Base, Stellar) | Q4 2026 |
+| (CCTP) Multi-chain deployment (Base, Stellar, Ethereum, Solana) | Q4 2026 |
 
 ### V4 — 2027
 
